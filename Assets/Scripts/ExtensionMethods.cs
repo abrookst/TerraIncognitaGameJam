@@ -3,6 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 
 public static class VectorUtils {
+    public static Vector3 XYZ(this Vector2 vec) {
+        return new Vector3(
+            vec.x,
+            0,
+            vec.y
+        );
+    }
+    public static Vector2 XZ(this Vector3 vec) {
+        return new Vector2(
+            vec.x,
+            vec.z
+        );
+    }
     public static Vector2Int Random(this Vector2Int bounds) {
         return new Vector2Int(
             UnityEngine.Random.Range(0, bounds.x),
@@ -18,6 +31,13 @@ public static class VectorUtils {
         );
     }
 
+    public static Vector2Int XZ(this Vector3Int pos) {
+        return new Vector2Int(
+            pos.x,
+            pos.z
+        );
+    }
+
     public static IEnumerable<Vector2Int> Area(Vector2Int a) {
         return Area(new Vector2Int(0, 0), a);
     }
@@ -30,5 +50,12 @@ public static class VectorUtils {
                 yield return new(x, y);
             }
         }
+    }
+}
+
+public static class IEnumerableUtils {
+    public static T Pick<T>(this List<T> list) {
+        int index = UnityEngine.Random.Range(0, list.Count);
+        return list[index];
     }
 }

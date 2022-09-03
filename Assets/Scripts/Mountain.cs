@@ -10,7 +10,7 @@ public class Mountain : Tile {
     public override void Generate() {
         foreach (Vector2Int pos in coordinates) {
             GameObject tile = GameObject.Instantiate(prefab);
-            Vector3 position = 10 * pos.XYZ();
+            Vector3 position = WorldMap.instance.GetPosFor(pos).XYZ();
             Quaternion rotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360f), 0);
             features[pos].Add(tile);
             Vector3 posOffset = UnityEngine.Random.onUnitSphere;
@@ -22,7 +22,7 @@ public class Mountain : Tile {
 
             if (coordinates.Contains(pos + Vector2Int.down)) {
                 tile = GameObject.Instantiate(prefab);
-                position = 10 * pos.XYZ() + 5 * Vector2Int.down.XYZ();
+                position = WorldMap.instance.tileSize * pos.XYZ() + 5 * Vector2Int.down.XYZ();
                 posOffset = UnityEngine.Random.onUnitSphere;
                 posOffset.y = 0;
                 posOffset *= 2;
@@ -35,7 +35,7 @@ public class Mountain : Tile {
 
             if (coordinates.Contains(pos + Vector2Int.right)) {
                 tile = GameObject.Instantiate(prefab);
-                position = 10 * pos.XYZ() + 5 * Vector2Int.right.XYZ();
+                position = WorldMap.instance.tileSize * pos.XYZ() + 5 * Vector2Int.right.XYZ();
                 posOffset = UnityEngine.Random.onUnitSphere;
                 posOffset.y = 0;
                 posOffset *= 2;

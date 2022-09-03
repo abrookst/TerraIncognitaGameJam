@@ -10,7 +10,7 @@ public class Plains : Tile {
     public override void Generate() {
         foreach (Vector2Int pos in coordinates) {
             GameObject tile = GameObject.Instantiate(prefab);
-            Vector3 position = 10 * pos.XYZ();
+            Vector3 position = WorldMap.instance.GetPosFor(pos).XYZ();
             Quaternion rotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 4) * 90f, 0);
             tile.transform.SetPositionAndRotation(position, rotation);
             features[pos].Add(tile);

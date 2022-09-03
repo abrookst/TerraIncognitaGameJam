@@ -14,4 +14,8 @@ public abstract class Tile {
             features[pos] = new List<GameObject>();
         }
     }
+
+    public bool Contains(Vector3 worldPos) {
+        return coordinates.Contains(WorldMap.instance.GetCoordFor(worldPos.XZ()));
+    }
 }

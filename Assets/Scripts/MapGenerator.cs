@@ -9,7 +9,7 @@ public class MapGenerator : MonoBehaviour
 
     void Start()
     {
-            limit = 1000;
+            limit = 100000;
         // FIXME: needs an exclusive version
         foreach (Vector2Int pos in VectorUtils.Area(map.bounds - new Vector2Int(1, 1)))
         {
@@ -34,8 +34,8 @@ public class MapGenerator : MonoBehaviour
         // Flood-fill to group tiles up.
         while (remaining.Count > 0)
         {
-            Debug.Log(remaining.Count);
-            Debug.Log(remaining.Keys.First());
+            // Debug.Log(remaining.Count);
+            // Debug.Log(remaining.Keys.First());
             if (--limit <= 0)
             {
                 Debug.Log("I'm stuck!");
