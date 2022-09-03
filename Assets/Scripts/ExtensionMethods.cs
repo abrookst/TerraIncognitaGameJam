@@ -18,6 +18,9 @@ public static class VectorUtils {
         );
     }
 
+    public static IEnumerable<Vector2Int> Area(Vector2Int a) {
+        return Area(new Vector2Int(0, 0), a);
+    }
     public static IEnumerable<Vector2Int> Area(Vector2Int a, Vector2Int b) {
         Vector2Int lower = new(a.x < b.x ? a.x : b.x, a.y < b.y ? a.y : b.y);
         Vector2Int upper = new(a.x > b.x ? a.x : b.x, a.y > b.y ? a.y : b.y);

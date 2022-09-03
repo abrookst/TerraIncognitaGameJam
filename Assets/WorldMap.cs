@@ -15,54 +15,10 @@ public class WorldMap : MonoBehaviour
 
     void Start()
     {
-        // this will move out of here later
-
-        // put down some BIG features first
-
-        for (int i = 0; i < 5; i++)
-        {
-            Vector2Int firstCorner = bounds.Random();
-            Vector2Int secondCorner = firstCorner + new Vector2Int(3, 3).Random();
-
-            Debug.Log(firstCorner);
-            Debug.Log(secondCorner);
-
-            List<Vector2Int> coords = VectorUtils.Area(firstCorner, secondCorner).ToList();
-
-            // Drop some of the tiles
-            coords = coords.Where(x => UnityEngine.Random.Range(0f, 1f) < 0.6f).ToList();
-
-            if (coords.All(pos => IsLegalPosition(pos)))
-            {
-                Mountain mountain = new(coords);
-                foreach (Vector2Int pos in coords)
-                {
-                    map[pos] = mountain;
-                }
-                
-                tiles.Add(mountain);
-            }
-
-        }
-        for (int x = 0; x < 10; x++)
-        {
-            for (int y = 0; y < 10; y++)
-            {
-                Vector2Int coord = new(x, y);
-
-                if (IsLegalPosition(coord))
-                {
-                    map[coord] = new Plains(new Vector2Int[] { coord });
-                    tiles.Add(map[coord]);
-                }
-            }
-        }
-
-        SpawnTiles();
 
     }
 
-    void SpawnTiles()
+    public void SpawnTiles()
     {
         foreach (Tile tile in tiles) {
             tile.Generate();

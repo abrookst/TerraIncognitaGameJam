@@ -3,7 +3,9 @@ using UnityEngine;
 public enum TileType
 {
     Plains,
-    Mountains
+    Mountains,
+    Forest,
+    Water
 }
 
 [CreateAssetMenu(fileName = "Tile", menuName = "Tile Data")]

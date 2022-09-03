@@ -3,11 +3,15 @@ using System.Collections.Generic;
 
 public abstract class Tile {
     public List<Vector2Int> coordinates = new();
-    public Dictionary<Vector2Int, GameObject> tiles = new();
+    public Dictionary<Vector2Int, List<GameObject>> features = new();
 
     public abstract void Generate();
 
     public Tile(IEnumerable<Vector2Int> coordinates) {
         this.coordinates = new List<Vector2Int>(coordinates);
+
+        foreach(Vector2Int pos in coordinates) {
+            features[pos] = new List<GameObject>();
+        }
     }
 }

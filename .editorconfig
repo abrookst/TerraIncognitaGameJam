@@ -1,0 +1,6 @@
+root = true
+indent_size = 4
+
+[Assets/StarterAssets/**.cs]
+generated_code = true
+dotnet_analyzer_diagnostic.severity = none
