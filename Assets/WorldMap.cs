@@ -6,8 +6,8 @@ using System;
 
 public class WorldMap : MonoBehaviour
 {
-    public readonly Dictionary<Vector2Int, TileData> map = new();
-    public readonly Dictionary<Vector2Int, GameObject> tiles = new();
+    public readonly Dictionary<Vector2Int, Tile> map = new();
+    public readonly List<Tile> tiles = new();
     public GameObject tilePrefab;
     public TileData plains;
     public TileData mountains;
@@ -22,18 +22,25 @@ public class WorldMap : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             Vector2Int firstCorner = bounds.Random();
-            Vector2Int secondCorner = firstCorner + new Vector2Int(1, 1);
+            Vector2Int secondCorner = firstCorner + new Vector2Int(3, 3).Random();
 
             Debug.Log(firstCorner);
             Debug.Log(secondCorner);
 
-            if (IsLegalArea(firstCorner, secondCorner))
-            {
-                foreach (Vector2Int pos in VectorUtils.Area(firstCorner, secondCorner))
-                {
-                    map[pos] = mountains;
-                }
+            List<Vector2Int> coords = VectorUtils.Area(firstCorner, secondCorner).ToList();
 
+            // Drop some of the tiles
+            coords = coords.Where(x => UnityEngine.Random.Range(0f, 1f) < 0.6f).ToList();
+
+            if (coords.All(pos => IsLegalPosition(pos)))
+            {
+                Mountain mountain = new(coords);
+                foreach (Vector2Int pos in coords)
+                {
+                    map[pos] = mountain;
+                }
+                
+                tiles.Add(mountain);
             }
 
         }
@@ -45,10 +52,8 @@ public class WorldMap : MonoBehaviour
 
                 if (IsLegalPosition(coord))
                 {
-                    if (UnityEngine.Random.Range(0f, 1f) < 0.75f)
-                        map[coord] = plains;
-                    else
-                        map[coord] = mountains;
+                    map[coord] = new Plains(new Vector2Int[] { coord });
+                    tiles.Add(map[coord]);
                 }
             }
         }
@@ -59,14 +64,8 @@ public class WorldMap : MonoBehaviour
 
     void SpawnTiles()
     {
-        foreach (Vector2Int pos in map.Keys)
-        {
-            tiles[pos] = Instantiate(tilePrefab);
-            MapTile mapTile = tiles[pos].GetComponent<MapTile>();
-            mapTile.tileData = map[pos];
-            Vector3 position = 10 * pos.XYZ();
-            Quaternion rotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 4) * 90f, 0);
-            tiles[pos].transform.SetPositionAndRotation(position, rotation);
+        foreach (Tile tile in tiles) {
+            tile.Generate();
         }
     }
 
