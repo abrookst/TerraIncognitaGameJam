@@ -1,0 +1,10 @@
+{
+  "RoslynExtensionsOptions": {
+    "EnableEditorConfigSupport": true,
+    "EnableAnalyzersSupport": true,
+    "LocationPaths": ["./NuGet/"]
+  },
+  "FormattingOptions": {
+    "IndentationSize": 4
+  }
+}
