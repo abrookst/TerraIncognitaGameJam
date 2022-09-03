@@ -10,7 +10,11 @@ public class Forest : Tile {
 
     }
 
-    public override void Generate() {
+    public override void Generate(Transform root) {
+        GameObject holderObj = new();
+        Transform holder = holderObj.transform;
+        holder.SetParent(root);
+        holder.position = Vector3.zero;
         
         Vector2Int min = coordinates.Aggregate((vec1, vec2) => {
             return new Vector2Int(Mathf.Min(vec1.x, vec2.x), Mathf.Min(vec1.y, vec2.y));
@@ -23,8 +27,8 @@ public class Forest : Tile {
         float radius = ((max - min).magnitude + 2) * WorldMap.instance.tileSize;
 
         foreach (Vector2Int pos in coordinates) {
-            GameObject tile = GameObject.Instantiate(prefab);
-            Vector3 position = WorldMap.instance.GetPosFor(pos).XYZ();
+            GameObject tile = GameObject.Instantiate(prefab, holder);
+            Vector3 position = WorldMap.instance.GetPosFor(pos);
             Quaternion rotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 4) * 90f, 0);
             tile.transform.SetPositionAndRotation(position, rotation);
             features[pos].Add(tile);
@@ -38,7 +42,7 @@ public class Forest : Tile {
         while(trees > 0) {
             --trees;
             Vector2Int coord = coordinates.Pick();
-            Vector3 position = WorldMap.instance.GetPosFor(coord).XYZ();
+            Vector3 position = WorldMap.instance.GetPosFor(coord);
             float maxOffset = WorldMap.instance.tileSize/2;
             position += new Vector3(
                 UnityEngine.Random.Range(-maxOffset, maxOffset),
@@ -46,12 +50,13 @@ public class Forest : Tile {
                 UnityEngine.Random.Range(-maxOffset, maxOffset)
             );
             Vector3 treePosition = position;
+            treePosition = WorldMap.instance.AddTerrainHeight(new Vector3(treePosition.x, 0, treePosition.z));
 
             Debug.Log(treePosition);
             // if (!Contains(dtreePosition))
                 // continue;
 
-            GameObject treeObj = GameObject.Instantiate(tree);
+            GameObject treeObj = GameObject.Instantiate(tree, holder);
             treeObj.transform.position = treePosition;
             Vector3 newScale = treeObj.transform.localScale;
             newScale.Scale(new Vector3(1, UnityEngine.Random.Range(0.7f, 1.5f), 1));

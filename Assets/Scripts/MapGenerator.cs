@@ -1,33 +1,50 @@
 using UnityEngine;
 using System.Linq;
+using System;
 using System.Collections.Generic;
+
+public enum TileAttribute {
+    Elevation,
+    Moisture,
+    Temperature
+}
+
 public class MapGenerator : MonoBehaviour
 {
     int limit = 100;
     private readonly Dictionary<Vector2Int, TileType> remaining = new();
     public WorldMap map;
 
+
     void Start()
     {
-            limit = 100000;
-        // FIXME: needs an exclusive version
-        foreach (Vector2Int pos in VectorUtils.Area(map.bounds - new Vector2Int(1, 1)))
+        foreach (TileAttribute attribute in Enum.GetValues(typeof(TileType)))
         {
-            float height = HeightAt(pos);
+            map.attributes[attribute] = new();
+        }
 
-            if (height > 128)
-            {
-                remaining[pos] = TileType.Mountains;
+        limit = 100000;
+        // FIXME: needs an exclusive version of Area
+        foreach (Vector2Int coord in VectorUtils.Area(map.bounds - new Vector2Int(1, 1)))
+        {
+            Vector3 worldPos = WorldMap.instance.GetPosFor(coord);
+
+            float elevation = WorldMap.instance.config.HeightAt(worldPos.XZ());
+            map.attributes[TileAttribute.Elevation][coord] = elevation;
+            float moisture =  WorldMap.instance.config.MoistureAt(worldPos.XZ());
+            map.attributes[TileAttribute.Moisture][coord] = moisture;
+            
+            remaining[coord] = TileType.Plains;
+            if (elevation > 0.8f) {
+                remaining[coord] = TileType.Mountains;
             }
-            else if (height < 64) {
-                remaining[pos] = TileType.Water;
+
+            if (elevation < 0.3f) {
+                remaining[coord] = TileType.Water;
             }
-            else
-            {
-                if (UnityEngine.Random.Range(0f, 1f) < 0.5f)
-                    remaining[pos] = TileType.Plains;
-                else
-                    remaining[pos] = TileType.Forest;
+
+            if (moisture > 0.5f && remaining[coord] == TileType.Plains) {
+                remaining[coord] = TileType.Forest;
             }
         }
 
@@ -68,6 +85,7 @@ public class MapGenerator : MonoBehaviour
             map.tiles.Add(tile);
         }
 
+        map.SetTerrain();
         map.SpawnTiles();
     }
 
@@ -97,11 +115,6 @@ public class MapGenerator : MonoBehaviour
         }
 
         return result;
-    }
-
-    float HeightAt(Vector2Int pos)
-    {
-        return SimplexNoise.Noise.CalcPixel2D(pos.x, pos.y, 0.25f);
     }
 }
 

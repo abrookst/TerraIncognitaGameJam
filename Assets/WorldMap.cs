@@ -6,8 +6,10 @@ using System;
 
 public class WorldMap : MonoBehaviour
 {
+    public MapConfig config;
     public static WorldMap instance;
     public readonly Dictionary<Vector2Int, Tile> map = new();
+    public readonly Dictionary<TileAttribute, Dictionary<Vector2Int, float>> attributes = new();
     public readonly List<Tile> tiles = new();
     public GameObject tilePrefab;
     public TileData plains;
@@ -15,16 +17,38 @@ public class WorldMap : MonoBehaviour
     public Vector2Int bounds = new(10, 10);
 
     public int tileSize = 10;
-
     void Awake()
     {
         WorldMap.instance = this;
     }
 
+    public void SetTerrain()
+    {
+        Terrain active = Terrain.activeTerrain;
+        int resolution = active.terrainData.heightmapResolution;
+        float[,] heightData= new float[resolution, resolution];
+
+        for (int y = 0; y < resolution; y++) {
+            for (int x = 0; x < resolution; x++) {
+                float remapFactor = active.terrainData.size.x / resolution;
+                Vector2 coord = new(x * remapFactor, y * remapFactor);
+                float height = config.HeightAt(coord);
+                heightData[y,x] = height;
+            }
+        }
+        active.terrainData.SetHeights(0, 0, heightData);
+    }
+
+    public Vector3 AddTerrainHeight(Vector3 worldPos) {
+        Vector3 result = worldPos;
+        result = result + new Vector3(0, Terrain.activeTerrain.SampleHeight(worldPos), 0);
+        return result;
+    }
+
     public void SpawnTiles()
     {
         foreach (Tile tile in tiles) {
-            tile.Generate();
+            tile.Generate(transform);
         }
     }
 
@@ -51,12 +75,15 @@ public class WorldMap : MonoBehaviour
         return !VectorUtils.Area(a, b).Any(coord => map.ContainsKey(coord));
     }
 
-    public Vector2 GetPosFor(Vector2Int coord)
+    public Vector3 GetPosFor(Vector2Int coord)
     {  
-        return new Vector2(
+        Vector3 result = new(
             coord.x * tileSize + tileSize / 2.0f,
+            0,
             coord.y * tileSize + tileSize / 2.0f
         );
+
+        return AddTerrainHeight(result);
     }
 
     public Vector2Int GetCoordFor(Vector2 pos) {
@@ -70,7 +97,7 @@ public class WorldMap : MonoBehaviour
     {
         foreach (Tile tile in tiles) {
             foreach (Vector2Int coord in tile.coordinates) {
-                Gizmos.DrawSphere(GetPosFor(coord).XYZ(), 1f);
+                Gizmos.DrawSphere(GetPosFor(coord), 1f);
             }
         }
     }
