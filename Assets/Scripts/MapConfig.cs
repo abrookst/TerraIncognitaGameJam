@@ -13,7 +13,7 @@ public class MapConfig : ScriptableObject {
 
     public float HeightAt(Vector2 pos)
     {
-        SimplexNoise.Noise.Seed = 1337;
+        SimplexNoise.Noise.Seed = 1337 + WorldMap.instance.seed;
         float raw = SimplexNoise.Noise.CalcPixel2D(Mathf.FloorToInt(1000 * pos.x), Mathf.FloorToInt(1000 * pos.y), 0.00002f);
         raw /= 255;
         return Mathf.Lerp(minElevation, maxElevation, raw);
@@ -26,7 +26,7 @@ public class MapConfig : ScriptableObject {
 
     public float MoistureAt(Vector2 pos)
     {
-        SimplexNoise.Noise.Seed = 420;
+        SimplexNoise.Noise.Seed = 420 + WorldMap.instance.seed;
         float raw = SimplexNoise.Noise.CalcPixel2D(Mathf.FloorToInt(1000 * pos.x), Mathf.FloorToInt(1000 * pos.y), 0.00002f);
         raw /= 255;
         return Mathf.Lerp(minMoisture, maxMoisture, raw);

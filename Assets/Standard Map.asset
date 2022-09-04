@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Standard Map
   m_EditorClassIdentifier: 
   minElevation: 0
-  maxElevation: 1.5
-  minMoisture: 0
+  maxElevation: 1
+  minMoisture: 0.4
   maxMoisture: 1
   minTemperature: 0
   maxTemperature: 1

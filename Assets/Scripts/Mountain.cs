@@ -7,6 +7,7 @@ public class Mountain : Tile
     public Mountain(IEnumerable<Vector2Int> coords) : base(coords)
     {
         marking = MapMarkingType.Rocky;
+        passable = false;
     }
 
     private void PutMountain(Vector2Int coord, Vector3 pos, Transform holder)

@@ -50,11 +50,14 @@ public class Forest : Tile {
                 UnityEngine.Random.Range(-maxOffset, maxOffset)
             );
             Vector3 treePosition = position;
+
+            Vector2 centerDelta = treePosition.XZ() - WorldMap.instance.GetPosFor(coord).XZ();
+            if (Mathf.Abs(centerDelta.x) < 1f || Mathf.Abs(centerDelta.y) < 1f)
+                continue;
+
             treePosition = WorldMap.instance.AddTerrainHeight(new Vector3(treePosition.x, 0, treePosition.z));
 
             Debug.Log(treePosition);
-            // if (!Contains(dtreePosition))
-                // continue;
 
             GameObject treeObj = GameObject.Instantiate(tree, holder);
             treeObj.transform.position = treePosition;

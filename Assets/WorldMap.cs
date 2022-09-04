@@ -16,10 +16,12 @@ public class WorldMap : MonoBehaviour
     public TileData plains;
     public TileData mountains;
     public Vector2Int bounds = new(10, 10);
+    public int seed;
 
     public int tileSize = 10;
     void Awake()
     {
+        seed = (int) Math.Floor((System.DateTime.Now - System.DateTime.UnixEpoch).TotalSeconds);
         WorldMap.instance = this;
     }
 

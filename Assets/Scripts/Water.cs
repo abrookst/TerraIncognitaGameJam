@@ -5,6 +5,7 @@ public class Water : Tile {
 
     public Water(IEnumerable<Vector2Int> coords) : base(coords) {
         marking = MapMarkingType.Watery;
+        passable = false;
     }
 
     public override void Generate(Transform root) {

@@ -6,6 +6,7 @@ public abstract class Tile {
     public Dictionary<Vector2Int, List<GameObject>> features = new();
 
     public MapMarkingType marking;
+    public bool passable = true;
 
     public abstract void Generate(Transform root);
 
