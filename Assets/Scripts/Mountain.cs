@@ -4,10 +4,13 @@ public class Mountain : Tile
 {
     private readonly GameObject prefab = Resources.Load<GameObject>("Prefabs/Mountain Tile");
 
+    public override bool Passable(Vector2Int pos)
+    {
+        return false;
+    }
     public Mountain(IEnumerable<Vector2Int> coords) : base(coords)
     {
         marking = MapMarkingType.Rocky;
-        passable = false;
     }
 
     private void PutMountain(Vector2Int coord, Vector3 pos, Transform holder)

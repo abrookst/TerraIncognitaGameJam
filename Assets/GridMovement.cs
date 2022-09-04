@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class GridMovement : MonoBehaviour
 {
-    public Vector2Int destination;
+    public Vector2Int destination = new(3,3);
     private Vector3 velocity;
 
     public Vector2Int orientation = Vector2Int.up;
@@ -42,10 +42,10 @@ public class GridMovement : MonoBehaviour
     public void Move(Vector2Int delta) {
         Vector2Int target = destination + delta;
 
-        if ((WorldMap.instance.GetPosFor(destination) - transform.position).magnitude > 0.1f)
+        if ((WorldMap.instance.GetPosFor(destination).XZ() - transform.position.XZ()).magnitude > 0.1f)
             return;
         
-        if (WorldMap.instance.map[target].passable) {
+        if (WorldMap.instance.map[target].Passable(target)) {
             destination = target;
         }
     }

@@ -4,12 +4,16 @@ using UnityEngine;
 using System.Linq;
 using System;
 
+public enum LandmarkKind {
+    SpawnPoint
+}
 public class WorldMap : MonoBehaviour
 {
     public bool initialized = false;
     public MapConfig config;
     public static WorldMap instance;
     public readonly Dictionary<Vector2Int, Tile> map = new();
+    public readonly Dictionary<Vector2Int, Landmark> landmarkMap = new();
     public readonly Dictionary<TileAttribute, Dictionary<Vector2Int, float>> attributes = new();
     public readonly Dictionary<TileType, MapMarkingType> markingTypes = new() {
         {TileType.Forest, MapMarkingType.Grassy},
@@ -100,9 +104,17 @@ public class WorldMap : MonoBehaviour
     }
 
     public Vector3 AddTerrainHeight(Vector3 worldPos) {
-        Vector3 result = worldPos;
-        result = result + new Vector3(0, Terrain.activeTerrain.SampleHeight(worldPos), 0);
-        return result;
+        Vector2Int coord = GetCoordFor(worldPos.XZ());
+        if (map.ContainsKey(coord)) {
+            Vector3 tilePos = map[GetCoordFor(worldPos.XZ())].AddHeight(worldPos);
+            Vector3 landmarkPos = Vector3.zero;
+            if (landmarkMap.ContainsKey(coord)) {
+                landmarkPos = landmarkMap[coord].AddHeight(worldPos);
+            }
+            return new Vector3(tilePos.x, Mathf.Max(tilePos.y, landmarkPos.y), tilePos.z);
+        }
+        else
+            return new Vector3(worldPos.x, Terrain.activeTerrain.SampleHeight(worldPos), worldPos.z);
     }
 
     public void SpawnTiles()
@@ -112,6 +124,18 @@ public class WorldMap : MonoBehaviour
         }
     }
 
+    public void SpawnLandmarks()
+    {
+        foreach (Vector2Int pos in landmarkMap.Keys) {
+            Landmark landmark = landmarkMap[pos];
+            landmark.Generate(transform, pos);
+        }
+    }
+
+    public void MarkInitialized()
+    {
+        initialized = true;
+    }
     public bool IsLegalPosition(Vector2Int pos)
     {
         return InBounds(pos) && (!map.ContainsKey(pos));

@@ -2,10 +2,22 @@ using UnityEngine;
 using System.Collections.Generic;
 public class Water : Tile {
     private readonly GameObject prefab = Resources.Load<GameObject>("Prefabs/Water Tile");
+    public Dictionary<Vector2Int, bool> frozen = new();
+
+    public override bool Passable(Vector2Int pos) {
+        return frozen[pos];
+    }
+
+    public override Vector3 AddHeight(Vector3 worldPos) {
+        Vector2Int pos = WorldMap.instance.GetCoordFor(worldPos.XZ());
+        if (frozen.ContainsKey(pos) && frozen[pos])
+            return new Vector3(worldPos.x, Mathf.Max(0.3f * Terrain.activeTerrain.terrainData.size.y, Terrain.activeTerrain.SampleHeight(worldPos)), worldPos.z);
+        else
+            return new Vector3(worldPos.x, Terrain.activeTerrain.SampleHeight(worldPos), worldPos.z);
+    }
 
     public Water(IEnumerable<Vector2Int> coords) : base(coords) {
         marking = MapMarkingType.Watery;
-        passable = false;
     }
 
     public override void Generate(Transform root) {
@@ -14,7 +26,8 @@ public class Water : Tile {
         holder.SetParent(root);
         holder.position = Vector3.zero;
         foreach (Vector2Int pos in coordinates) {
-            if (WorldMap.instance.config.TemperatureAt(WorldMap.instance.GetPosFor(pos)) > 0.4f)
+            frozen[pos] = WorldMap.instance.config.TemperatureAt(WorldMap.instance.GetPosFor(pos)) < 0.4f;
+            if (!frozen[pos])
                 continue;
             GameObject tile = GameObject.Instantiate(prefab, holder);
             Vector3 position = WorldMap.instance.GetPosFor(pos);

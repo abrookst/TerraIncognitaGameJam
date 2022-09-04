@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ab97e1db984447c6a43869ac4a476aa, type: 3}
+  m_Name: Level 5 Dialogue
+  m_EditorClassIdentifier: 
+  items:
+  - text: "Hey. Here\u2019s your pay. And I think this is going to be your last paycheck.
+      We can\u2019t\u2026 we can't keep the office afloat like this. Sorry, I really
+      thought that The Shift would change things, but it only made things worse.
+      Please pack up your belongings by the end of today. "
+    image: {fileID: 2800000, guid: 75c6ce7f6eec84edc9c3f6d68a2b3dfe, type: 3}

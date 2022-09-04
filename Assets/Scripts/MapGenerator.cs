@@ -23,6 +23,7 @@ public class MapGenerator : MonoBehaviour
             map.attributes[attribute] = new();
         }
 
+
         limit = 100000;
         // FIXME: needs an exclusive version of Area
         foreach (Vector2Int coord in VectorUtils.Area(map.bounds - new Vector2Int(1, 1)))
@@ -35,6 +36,13 @@ public class MapGenerator : MonoBehaviour
             map.attributes[TileAttribute.Moisture][coord] = moisture;
             
             remaining[coord] = WorldMap.instance.GetTileKind(worldPos);
+        }
+
+
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                remaining[new Vector2Int(3+dx,3+dy)] = TileType.Plains;
+            }
         }
 
         // Flood-fill to group tiles up.
@@ -74,11 +82,13 @@ public class MapGenerator : MonoBehaviour
 
             map.tiles.Add(tile);
         }
+        map.landmarkMap[new Vector2Int(3,3)] = new SpawnPoint();
 
         map.SetTerrain();
         map.SpawnTiles();
+        map.SpawnLandmarks();
         map.ColorTerrain();
-        map.initialized = true;
+        map.MarkInitialized();
     }
 
     List<Vector2Int> FloodFill(Vector2Int pos, TileType kind)

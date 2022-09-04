@@ -34,7 +34,7 @@ public class Forest : Tile {
             features[pos].Add(tile);
         }
 
-        int trees = UnityEngine.Random.Range(coordinates.Count * 7, coordinates.Count * 14);
+        int trees = UnityEngine.Random.Range(coordinates.Count * 14, coordinates.Count * 20);
         
         List<Vector3> positions = new();
         while(trees > 0) {

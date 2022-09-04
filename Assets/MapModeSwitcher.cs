@@ -20,17 +20,4 @@ public class MapModeSwitcher : MonoBehaviour
     {
         
     }
-
-    public void ToggleMap()
-    {
-        mapMode = !mapMode;
-        mapCam.enabled = mapMode;
-        playerControls.enabled = !mapMode;
-
-        if (mapMode) {
-			Cursor.lockState = CursorLockMode.None;
-        } else {
-			Cursor.lockState = CursorLockMode.Locked;
-        }
-    }
 }

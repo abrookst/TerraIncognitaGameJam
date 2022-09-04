@@ -8,7 +8,6 @@ public class Desert : Tile {
 
     public Desert(IEnumerable<Vector2Int> coords) : base(coords) {
         marking = MapMarkingType.Sandy;
-        passable = true;
     }
     public override void Generate(Transform root) {
         GameObject holderObj = new();

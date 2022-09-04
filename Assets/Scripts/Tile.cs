@@ -6,7 +6,13 @@ public abstract class Tile {
     public Dictionary<Vector2Int, List<GameObject>> features = new();
 
     public MapMarkingType marking;
-    public bool passable = true;
+    public virtual bool Passable(Vector2Int pos) {
+        return true;
+    }
+
+    public virtual Vector3 AddHeight(Vector3 worldPos) {
+        return new Vector3(worldPos.x, Terrain.activeTerrain.SampleHeight(worldPos), worldPos.z);
+    }
 
     public abstract void Generate(Transform root);
 

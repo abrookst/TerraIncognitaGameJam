@@ -4,6 +4,7 @@ using System.Linq;
 
 [CreateAssetMenu(fileName = "Map Config", menuName = "Map Config")]
 public class MapConfig : ScriptableObject {
+    public float timeLimit = 300f;
     public Vector2Int bounds;
     public AnimationCurve elevationCurve;
     public float minElevation;
