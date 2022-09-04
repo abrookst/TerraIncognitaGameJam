@@ -11,6 +11,13 @@ public class WorldMap : MonoBehaviour
     public static WorldMap instance;
     public readonly Dictionary<Vector2Int, Tile> map = new();
     public readonly Dictionary<TileAttribute, Dictionary<Vector2Int, float>> attributes = new();
+    public readonly Dictionary<TileType, MapMarkingType> markingTypes = new() {
+        {TileType.Forest, MapMarkingType.Grassy},
+        {TileType.Plains, MapMarkingType.Grassy},
+        {TileType.Mountains, MapMarkingType.Rocky},
+        {TileType.Water, MapMarkingType.Watery},
+        {TileType.Desert, MapMarkingType.Sandy},
+    };
     public readonly List<Tile> tiles = new();
     public GameObject tilePrefab;
     public TileData plains;
@@ -23,11 +30,21 @@ public class WorldMap : MonoBehaviour
     {
         seed = (int) Math.Floor((System.DateTime.Now - System.DateTime.UnixEpoch).TotalSeconds);
         WorldMap.instance = this;
+        bounds = config.bounds;
+    }
+
+    void Start()
+    {
+        Transform water = transform.Find("Water");
+        water.localScale = tileSize * bounds.XYZ() / 2 + Vector3.up;
+        water.position = tileSize * bounds.XYZ() / 2 + new Vector3(0, Terrain.activeTerrain.terrainData.size.y * 0.3f, 0);
     }
 
     public void SetTerrain()
     {
         Terrain active = Terrain.activeTerrain;
+        Vector2 scaledBounds = tileSize * bounds;
+        active.terrainData.size = new Vector3(scaledBounds.x, active.terrainData.size.y, scaledBounds.y);
         int resolution = active.terrainData.heightmapResolution;
         float[,] heightData= new float[resolution, resolution];
 
@@ -40,6 +57,46 @@ public class WorldMap : MonoBehaviour
             }
         }
         active.terrainData.SetHeights(0, 0, heightData);
+    }
+
+    public void ColorTerrain()
+    {
+        Terrain active = Terrain.activeTerrain;
+
+        int alphaWidth = active.terrainData.alphamapWidth;
+        int alphaHeight = active.terrainData.alphamapHeight;
+        int count = active.terrainData.alphamapLayers;
+
+        float[,,] alphamapData = new float[alphaWidth, alphaHeight, count];
+
+        for (int y = 0; y < alphaHeight; y++) {
+            for (int x = 0; x < alphaWidth; x++) {
+                Vector2 pos = active.transform.position.XZ() +
+                    new Vector2(
+                        ((float) y) / alphaHeight * active.terrainData.size.x,
+                        ((float) x) / alphaWidth * active.terrainData.size.z
+                    );
+                MapMarkingType type = markingTypes[WorldMap.instance.GetTileKind(pos.XYZ())];
+
+                alphamapData[x,y,(int) type] = 1;
+            }
+        }
+        float[,,] blurredData = new float[alphaWidth, alphaHeight, count];
+
+        int blurSize = 0;
+        for (int y = blurSize; y < alphaHeight-blurSize; y++) {
+            for (int x = blurSize; x < alphaWidth-blurSize; x++) {
+                for (int layer = 0; layer < count; layer++) {
+                    for (int dx = -blurSize; dx <= blurSize; dx++) {
+                        for (int dy = blurSize; dy <= blurSize; dy++) {
+                            blurredData[x+dx, y+dy, layer] += alphamapData[x,y,layer] / Mathf.Pow(blurSize * 2 + 1, 2);
+                        }
+                    }
+                }
+            }
+        }
+
+        active.terrainData.SetAlphamaps(0, 0, blurredData);
     }
 
     public Vector3 AddTerrainHeight(Vector3 worldPos) {
@@ -122,6 +179,30 @@ public class WorldMap : MonoBehaviour
         }
 
         return points / map.Count;
+    }
+
+    public TileType GetTileKind(Vector3 pos) {
+        TileType kind = TileType.Plains;
+        float elevation = config.HeightAt(pos.XZ());
+        float moisture = config.MoistureAt(pos.XZ());
+        float temperature = config.TemperatureAt(pos.XZ());
+
+        if (elevation > 0.8f) {
+            kind = TileType.Mountains;
+        }
+
+        if (elevation < 0.3f) {
+            kind = TileType.Water;
+        }
+
+        if (moisture > 0.5f && kind == TileType.Plains) {
+            kind = TileType.Forest;
+        }
+
+        if (moisture < 0.4f && kind == TileType.Plains && temperature > 0.6f)
+            kind = TileType.Desert;
+
+        return kind;
     }
 }
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public static class VectorUtils {
     public static Vector3 XYZ(this Vector2 vec) {
@@ -57,5 +58,24 @@ public static class IEnumerableUtils {
     public static T Pick<T>(this List<T> list) {
         int index = UnityEngine.Random.Range(0, list.Count);
         return list[index];
+    }
+
+    public static T MinBy<T,V>(this IEnumerable<T> enumeration, Func<T,V> metric) {
+        return MinBy(enumeration, metric, Comparer<V>.Default);
+    }
+
+    public static T MinBy<T,V>(this IEnumerable<T> enumeration, Func<T,V> metric, IComparer<V> compare) {
+        T minTarget = enumeration.First();
+        V minValue = metric(minTarget);
+
+        foreach (T candidate in enumeration) {
+            V value = metric(candidate);
+            if (compare.Compare(value, minValue) < 0) {
+                minTarget = candidate;
+                minValue = value;
+            }
+        }
+
+        return minTarget;
     }
 }

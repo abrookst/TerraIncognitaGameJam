@@ -2,14 +2,14 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Forest : Tile {
-    private readonly GameObject prefab = Resources.Load<GameObject>("Prefabs/Forest Tile");
-    private readonly GameObject tree = Resources.Load<GameObject>("Prefabs/Forest Tree");
+public class Desert : Tile {
+    private readonly GameObject cactus = Resources.Load<GameObject>("Prefabs/Desert Cactus");
+    private readonly GameObject prefab = Resources.Load<GameObject>("Prefabs/Desert Tile");
 
-    public Forest(IEnumerable<Vector2Int> coords) : base(coords) {
-        marking = MapMarkingType.Grassy;
+    public Desert(IEnumerable<Vector2Int> coords) : base(coords) {
+        marking = MapMarkingType.Sandy;
+        passable = true;
     }
-
     public override void Generate(Transform root) {
         GameObject holderObj = new();
         Transform holder = holderObj.transform;
@@ -26,13 +26,13 @@ public class Forest : Tile {
 
         float radius = ((max - min).magnitude + 2) * WorldMap.instance.tileSize;
 
-        foreach (Vector2Int pos in coordinates) {
-            GameObject tile = GameObject.Instantiate(prefab, holder);
-            Vector3 position = WorldMap.instance.GetPosFor(pos);
-            Quaternion rotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 4) * 90f, 0);
-            tile.transform.SetPositionAndRotation(position, rotation);
-            features[pos].Add(tile);
-        }
+        // foreach (Vector2Int pos in coordinates) {
+        //     GameObject tile = GameObject.Instantiate(prefab, holder);
+        //     Vector3 position = WorldMap.instance.GetPosFor(pos);
+        //     Quaternion rotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 4) * 90f, 0);
+        //     tile.transform.SetPositionAndRotation(position, rotation);
+        //     features[pos].Add(tile);
+        // }
 
         int trees = UnityEngine.Random.Range(coordinates.Count * 7, coordinates.Count * 14);
         
@@ -55,11 +55,8 @@ public class Forest : Tile {
 
             treePosition = WorldMap.instance.AddTerrainHeight(new Vector3(treePosition.x, 0, treePosition.z));
 
-            GameObject treeObj = GameObject.Instantiate(tree, holder);
-            treeObj.transform.position = treePosition;
-            Vector3 newScale = treeObj.transform.localScale;
-            newScale.Scale(new Vector3(1, UnityEngine.Random.Range(0.7f, 1.5f), 1));
-            treeObj.transform.localScale = newScale;
+            GameObject treeObj = GameObject.Instantiate(cactus, holder);
+            treeObj.transform.SetPositionAndRotation(treePosition, Quaternion.Euler(-90, UnityEngine.Random.Range(0f, 360f), 0));
         }
     }
 }

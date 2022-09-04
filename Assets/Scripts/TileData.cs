@@ -5,7 +5,8 @@ public enum TileType
     Plains,
     Mountains,
     Forest,
-    Water
+    Water,
+    Desert
 }
 
 [CreateAssetMenu(fileName = "Tile", menuName = "Tile Data")]

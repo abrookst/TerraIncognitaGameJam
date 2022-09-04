@@ -72,13 +72,14 @@ public class MapController : MonoBehaviour
     private Dictionary<MapMarkingType, Toggle> markerOptions = new();
     void Awake()
     {
+
+    }
+    void Setup()
+    {
         texture = new(dimensions.x, dimensions.y)
         {
             filterMode = FilterMode.Point
         };
-    }
-    void Start()
-    {
         foreach (MapMarkingType marker in Enum.GetValues(typeof(MapMarkingType))) {
             GameObject option = Instantiate(markerColorOption, markerColorPicker);
             option.transform.Find("Background").GetComponent<Image>().color = markingColors[marker];
@@ -160,6 +161,8 @@ public class MapController : MonoBehaviour
     {
         if (WorldMap.instance != null) {
             if (!initialized) {
+                dimensions = WorldMap.instance.bounds;
+                Setup();
                 WorldMap.instance.FillMap(this);
                 initialized = true;
             }
@@ -188,13 +191,10 @@ public class MapController : MonoBehaviour
             //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
             foreach (RaycastResult result in results)
             {
-                Debug.Log("Hit " + result.gameObject.name);
-
                 if (result.gameObject.name == "Image")
                 {
                     RectTransformUtility.ScreenPointToLocalPointInRectangle(rect,
                     result.screenPosition, Camera.main, out Vector2 localPosition);
-                    Debug.Log(localPosition);
                     localPosition += rect.rect.size / 2;
                     localPosition.Scale(new Vector2(1 / rect.rect.width, 1 / rect.rect.height));
 

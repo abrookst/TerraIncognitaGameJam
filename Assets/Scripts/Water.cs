@@ -14,6 +14,8 @@ public class Water : Tile {
         holder.SetParent(root);
         holder.position = Vector3.zero;
         foreach (Vector2Int pos in coordinates) {
+            if (WorldMap.instance.config.TemperatureAt(WorldMap.instance.GetPosFor(pos)) > 0.4f)
+                continue;
             GameObject tile = GameObject.Instantiate(prefab, holder);
             Vector3 position = WorldMap.instance.GetPosFor(pos);
             position.y = Terrain.activeTerrain.terrainData.size.y * 0.3f;

@@ -34,18 +34,7 @@ public class MapGenerator : MonoBehaviour
             float moisture =  WorldMap.instance.config.MoistureAt(worldPos.XZ());
             map.attributes[TileAttribute.Moisture][coord] = moisture;
             
-            remaining[coord] = TileType.Plains;
-            if (elevation > 0.8f) {
-                remaining[coord] = TileType.Mountains;
-            }
-
-            if (elevation < 0.3f) {
-                remaining[coord] = TileType.Water;
-            }
-
-            if (moisture > 0.5f && remaining[coord] == TileType.Plains) {
-                remaining[coord] = TileType.Forest;
-            }
+            remaining[coord] = WorldMap.instance.GetTileKind(worldPos);
         }
 
         // Flood-fill to group tiles up.
@@ -74,6 +63,7 @@ public class MapGenerator : MonoBehaviour
                 TileType.Plains => new Plains(foundTiles),
                 TileType.Forest => new Forest(foundTiles),
                 TileType.Water => new Water(foundTiles),
+                TileType.Desert => new Desert(foundTiles),
                 _ => null
             };
 
@@ -87,6 +77,7 @@ public class MapGenerator : MonoBehaviour
 
         map.SetTerrain();
         map.SpawnTiles();
+        map.ColorTerrain();
         map.initialized = true;
     }
 
