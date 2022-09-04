@@ -3,10 +3,10 @@ Made for the September 2022 RPI Game Jam
 
 Credits:
 
-Steven - Coding, Modeling
+- **Steven** - Coding, Modeling
 
-Anton - Art, Character Designs
+- **Anton** - Art, Character Designs
 
-Ali - Dialouge, 2d Textures
+- **Ali** - Dialouge, 2d Textures
 
-Nyx - Modeling
+- **Nyx** - Modeling
