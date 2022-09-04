@@ -4,7 +4,7 @@ public class Plains : Tile {
     private readonly GameObject prefab = Resources.Load<GameObject>("Prefabs/Plains Tile");
 
     public Plains(IEnumerable<Vector2Int> coords) : base(coords) {
-
+        marking = MapMarkingType.Grassy;
     }
 
     public override void Generate(Transform root) {

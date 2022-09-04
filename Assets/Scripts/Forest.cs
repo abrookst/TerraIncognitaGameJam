@@ -7,7 +7,7 @@ public class Forest : Tile {
     private readonly GameObject tree = Resources.Load<GameObject>("Prefabs/Forest Tree");
 
     public Forest(IEnumerable<Vector2Int> coords) : base(coords) {
-
+        marking = MapMarkingType.Grassy;
     }
 
     public override void Generate(Transform root) {

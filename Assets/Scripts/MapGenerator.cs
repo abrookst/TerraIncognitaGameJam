@@ -87,6 +87,7 @@ public class MapGenerator : MonoBehaviour
 
         map.SetTerrain();
         map.SpawnTiles();
+        map.initialized = true;
     }
 
     List<Vector2Int> FloodFill(Vector2Int pos, TileType kind)

@@ -6,6 +6,7 @@ using System;
 
 public class WorldMap : MonoBehaviour
 {
+    public bool initialized = false;
     public MapConfig config;
     public static WorldMap instance;
     public readonly Dictionary<Vector2Int, Tile> map = new();
@@ -100,6 +101,25 @@ public class WorldMap : MonoBehaviour
                 Gizmos.DrawSphere(GetPosFor(coord), 1f);
             }
         }
+    }
+
+    public void FillMap(MapController mapController) {
+        foreach (Vector2Int pos in map.Keys) {
+            mapController.markings[pos] = map[pos].marking;
+        }
+
+        mapController.Refresh();
+    }
+
+    public float ScoreMap(MapController mapController) {
+        float points = 0;
+        foreach (Vector2Int pos in map.Keys) {
+            if (mapController.markings[pos] == map[pos].marking) {
+                points += 1;
+            }
+        }
+
+        return points / map.Count;
     }
 }
 

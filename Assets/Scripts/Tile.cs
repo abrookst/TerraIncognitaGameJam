@@ -5,6 +5,8 @@ public abstract class Tile {
     public List<Vector2Int> coordinates = new();
     public Dictionary<Vector2Int, List<GameObject>> features = new();
 
+    public MapMarkingType marking;
+
     public abstract void Generate(Transform root);
 
     public Tile(IEnumerable<Vector2Int> coordinates) {

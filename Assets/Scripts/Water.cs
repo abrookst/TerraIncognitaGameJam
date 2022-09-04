@@ -4,7 +4,7 @@ public class Water : Tile {
     private readonly GameObject prefab = Resources.Load<GameObject>("Prefabs/Water Tile");
 
     public Water(IEnumerable<Vector2Int> coords) : base(coords) {
-
+        marking = MapMarkingType.Watery;
     }
 
     public override void Generate(Transform root) {

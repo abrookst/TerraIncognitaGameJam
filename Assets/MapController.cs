@@ -45,6 +45,8 @@ public class MapController : MonoBehaviour
         { MapMarkingType.Watery, Color.blue }
     };
 
+    public bool initialized = false;
+
     public Vector2Int dimensions;
     RectTransform rect;
     RawImage image;
@@ -62,6 +64,7 @@ public class MapController : MonoBehaviour
     private MapMarkingType drawingOver;
 
     public TMP_Text modeText;
+    public TMP_Text scoreTracker;
 
     public RectTransform markerColorPicker;
     public GameObject markerColorOption;
@@ -155,7 +158,14 @@ public class MapController : MonoBehaviour
 
     void Update()
     {
+        if (WorldMap.instance != null) {
+            if (!initialized) {
+                WorldMap.instance.FillMap(this);
+                initialized = true;
+            }
 
+            scoreTracker.text = Mathf.Round(WorldMap.instance.ScoreMap(this) * 100).ToString() + "%";
+        }
         modeText.text = currentMode.ToString();
 
         bool started = Input.GetKeyDown(KeyCode.Mouse0);
@@ -226,6 +236,15 @@ public class MapController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void Refresh()
+    {
+        foreach (Vector2Int pos in markings.Keys) {
+            texture.SetPixel(pos.x, pos.y, markingColors[markings[pos]]);
+        }
+
+        texture.Apply();
     }
 
     void DrawOnMap(Vector2Int spot)
