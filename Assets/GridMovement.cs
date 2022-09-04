@@ -13,7 +13,9 @@ public class GridMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Vector3 result = WorldMap.instance.GetPosFor(destination);
+        result = WorldMap.instance.AddTerrainHeight(result);
+        transform.position = result;
     }
 
     // Update is called once per frame

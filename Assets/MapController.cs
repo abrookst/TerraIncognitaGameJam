@@ -163,11 +163,23 @@ public class MapController : MonoBehaviour
             if (!initialized) {
                 dimensions = WorldMap.instance.bounds;
                 Setup();
-                WorldMap.instance.FillMap(this);
+                // WorldMap.instance.FillMap(this);
                 initialized = true;
             }
 
-            scoreTracker.text = Mathf.Round(WorldMap.instance.ScoreMap(this) * 100).ToString() + "%";
+            float percent = WorldMap.instance.ScoreMap(this);
+
+            if (percent < 0.25f) {
+                scoreTracker.text = "Get to work!";
+            } else if (percent < 0.5f) {
+                scoreTracker.text = "Keep working.";
+            } else if (percent < 0.75f) {
+                scoreTracker.text = "Getting there.";
+            } else if (percent < 0.9f) {
+                scoreTracker.text = "Good.";
+            } else if (percent < 1f) {
+                scoreTracker.text = "Great!";
+            }
         }
         modeText.text = currentMode.ToString();
 

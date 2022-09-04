@@ -29,22 +29,22 @@ MonoBehaviour:
   - text: "Enough chit-chat. Let\u2019s go through the basics of what you have to
       do. "
     image: {fileID: 2800000, guid: 84c0f0fa3e99944a987d289472788a3a, type: 3}
-  - text: 'From there, you can pick up the highlighter at the top right to draw out
-      the ground. There are different colors for different types of ground. '
-    image: {fileID: 2800000, guid: 84c0f0fa3e99944a987d289472788a3a, type: 3}
   - text: Explore the area around you, get a feel for the land beneath your feet,
       then head back to your cartography station.
     image: {fileID: 2800000, guid: 84c0f0fa3e99944a987d289472788a3a, type: 3}
-  - text: "If you make any mistakes, there\u2019s an eraser at the bottom"
+  - text: 'From there, you can pick up the highlighter at the top right to draw out
+      the ground. There are different colors for different types of ground. '
     image: {fileID: 2800000, guid: 84c0f0fa3e99944a987d289472788a3a, type: 3}
+  - text: Green is grassy. Red is rocky. Yellow is sandy. Blue is watery. You get
+      the idea.
+    image: {fileID: 2800000, guid: 68f39fb528eaf426fb5540b17f388040, type: 3}
+  - text: If you make any mistakes, hit 1 for the eraser.
+    image: {fileID: 2800000, guid: 5adb278f3b5a74a3a870e068908cc20a, type: 3}
   - text: 'You also have a pencil for sketching anything else notable on the map.
       Though we won''t grade you on anything you write. '
-    image: {fileID: 2800000, guid: 84c0f0fa3e99944a987d289472788a3a, type: 3}
-  - text: 'You also have a pencil for sketching anything else notable on the map.
-      Though we won''t grade you on anything you write. '
-    image: {fileID: 2800000, guid: 84c0f0fa3e99944a987d289472788a3a, type: 3}
+    image: {fileID: 2800000, guid: 657765b1506354f4191e4f8aa25988f2, type: 3}
   - text: 'Speaking of grading, we will be grading you on the accuracy and speed
       at which you finish your map. And that will determine your pay. '
     image: {fileID: 2800000, guid: 84c0f0fa3e99944a987d289472788a3a, type: 3}
   - text: Good luck.
-    image: {fileID: 2800000, guid: 84c0f0fa3e99944a987d289472788a3a, type: 3}
+    image: {fileID: 2800000, guid: 9ab1e6a4f6f3d439996fe6d45630ef6a, type: 3}

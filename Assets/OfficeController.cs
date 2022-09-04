@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public enum OfficeStates {
     Computer,
@@ -11,7 +12,11 @@ public enum OfficeStates {
 }
 public class OfficeController : MonoBehaviour
 {
-    public GameProgress progress;
+    public static bool gameStarted = false;
+    public static int level = 0;
+    public static float lastScore = -1;
+    public Transform buttonHolder;
+    public TMP_Text scoreText;
     public Dialogue dialogue;
     public List<DialogueSequence> dialogueSequences = new();
     public OfficeStates state;
@@ -21,11 +26,22 @@ public class OfficeController : MonoBehaviour
     public MapConfig mapSettings;
 
     public List<MapConfig> configs = new();
+
+    void Awake()
+    {
+        if (!gameStarted) {
+            gameStarted = true;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Setting dialogue for level " + progress.level);
-        dialogue.sequence = dialogueSequences[progress.level];
+        Debug.Log("Setting dialogue for level " + level);
+        dialogue.sequence = dialogueSequences[level];
+        for (int i = 0; i < buttonHolder.childCount; i++) {
+            buttonHolder.GetChild(i).gameObject.SetActive(level >= i);
+        }
+        
     }
 
     // Update is called once per frame
@@ -33,6 +49,10 @@ public class OfficeController : MonoBehaviour
     {
         computerCam.enabled = state == OfficeStates.Computer;
         pinboardCam.enabled = state == OfficeStates.Pinboard;
+
+        if (lastScore >= 0) {
+            scoreText.text = "Score: \n" + Mathf.Round(lastScore * 100) + "%";
+        }
     }
 
     public void StartGame()
@@ -80,7 +100,8 @@ public class OfficeController : MonoBehaviour
     }
 
     public void StartLevel(int index) {
-        progress.level = index;
+        level = index;
+        Debug.Log(level);
         MapConfig chosen = configs[index - 1];
         mapSettings.timeLimit = chosen.timeLimit;
         mapSettings.bounds = chosen.bounds;

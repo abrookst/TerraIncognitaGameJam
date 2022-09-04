@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour
 {
     public GameObject sun;
     public MapController map;
-    public GameProgress progress;
 
     float startTime;
     // Start is called before the first frame update
@@ -26,6 +25,7 @@ public class GameManager : MonoBehaviour
         sun.transform.rotation = Quaternion.Euler(Mathf.Lerp(0, 180, t), 90, 0);
 
         if (t >= 1) {
+            OfficeController.lastScore = WorldMap.instance.ScoreMap(map);
             FinishLevel();
         }
     }

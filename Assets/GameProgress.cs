@@ -4,20 +4,21 @@ using UnityEngine;
 using System;
 
 [CreateAssetMenu(fileName = "Game Progress Data", menuName = "Create Progress Data")]
-public class GameProgress : ScriptableObject, ISerializationCallbackReceiver
+public class GameProgress : ScriptableObject
 {
-    [NonSerialized]
     public float lastScore;
-
     [NonSerialized]
+    public bool initialized;
+
     public int level = 0;
 
     public int startLevel = 0;
 
-    public void OnAfterDeserialize()
+    public void Initialize()
     {
+        Debug.Log("Initializing");
+        initialized = true;
         level = startLevel;
+        lastScore = -1;
     }
-
-    public void OnBeforeSerialize() { }
 }

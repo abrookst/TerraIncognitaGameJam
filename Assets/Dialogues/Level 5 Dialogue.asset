@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   items:
   - text: "Hey. Here\u2019s your pay. And I think this is going to be your last paycheck.
-      We can\u2019t\u2026 we can't keep the office afloat like this. Sorry, I really
-      thought that The Shift would change things, but it only made things worse.
-      Please pack up your belongings by the end of today. "
+      We can\u2019t\u2026 we can't keep the office afloat like this. "
+    image: {fileID: 2800000, guid: 75c6ce7f6eec84edc9c3f6d68a2b3dfe, type: 3}
+  - text: 'Sorry, I really thought that The Shift would change things, but it only
+      made things worse. Please pack up your belongings by the end of today. '
     image: {fileID: 2800000, guid: 75c6ce7f6eec84edc9c3f6d68a2b3dfe, type: 3}

@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa90e1849080c496fab8cd926d5c3f5b, type: 3}
   m_Name: Game Progress Data
   m_EditorClassIdentifier: 
+  lastScore: 0.5
+  level: 1
   startLevel: 0
