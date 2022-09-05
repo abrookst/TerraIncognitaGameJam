@@ -7,13 +7,22 @@ using System;
 public enum LandmarkKind {
     SpawnPoint
 }
+
+// The god-object! This thing stores all of the map data.
+// It's accessed through a static singleton. Everyone uses it.
 public class WorldMap : MonoBehaviour
 {
     public bool initialized = false;
     public MapConfig config;
     public static WorldMap instance;
+
+    // Important note: Vector2Int is used to address *tiles*.
+    // I call these values "coordinates"
+    // Vector3s are used for world-space positions.
     public readonly Dictionary<Vector2Int, Tile> map = new();
     public readonly Dictionary<Vector2Int, Landmark> landmarkMap = new();
+
+    // Used for grading your work.
     public readonly Dictionary<TileAttribute, Dictionary<Vector2Int, float>> attributes = new();
     public readonly Dictionary<TileType, MapMarkingType> markingTypes = new() {
         {TileType.Forest, MapMarkingType.Grassy},
@@ -39,11 +48,15 @@ public class WorldMap : MonoBehaviour
 
     void Start()
     {
+        // I think this scales it wrongly
         Transform water = transform.Find("Water");
         water.localScale = tileSize * bounds.XYZ() / 2 + Vector3.up;
         water.position = tileSize * bounds.XYZ() / 2 + new Vector3(0, Terrain.activeTerrain.terrainData.size.y * 0.3f, 0);
     }
 
+
+    // This sets up the terrain elevations. It happens first, so that
+    // the tiles can figure out where to put things.    
     public void SetTerrain()
     {
         Terrain active = Terrain.activeTerrain;
@@ -63,6 +76,8 @@ public class WorldMap : MonoBehaviour
         active.terrainData.SetHeights(0, 0, heightData);
     }
 
+    // Colors the terrain. This happens later. It consults the tiles
+    // to find out what the colors ought to be.
     public void ColorTerrain()
     {
         Terrain active = Terrain.activeTerrain;
@@ -87,6 +102,7 @@ public class WorldMap : MonoBehaviour
         }
         float[,,] blurredData = new float[alphaWidth, alphaHeight, count];
 
+        // This was not working right, so I disabled it.
         int blurSize = 0;
         for (int y = blurSize; y < alphaHeight-blurSize; y++) {
             for (int x = blurSize; x < alphaWidth-blurSize; x++) {
@@ -131,11 +147,13 @@ public class WorldMap : MonoBehaviour
             landmark.Generate(transform, pos);
         }
     }
-
+    
+    // The MapController won't try to use our data until this is set.
     public void MarkInitialized()
     {
         initialized = true;
     }
+    
     public bool IsLegalPosition(Vector2Int pos)
     {
         return InBounds(pos) && (!map.ContainsKey(pos));

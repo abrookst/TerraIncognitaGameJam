@@ -32,9 +32,10 @@ public enum MapDrawMode
     Pencil
 }
 
+// This manages the map you draw on.
 public class MapController : MonoBehaviour
 {
-
+    
     public Dictionary<Vector2Int, MapMarkingType> markings = new();
     public Dictionary<Vector2, MapStampType> stamps = new();
     public Dictionary<MapMarkingType, Color> markingColors = new() {
@@ -74,6 +75,8 @@ public class MapController : MonoBehaviour
     {
 
     }
+
+    // Lots of boring code for setting up the textures. It also draws the grid.
     void Setup()
     {
         texture = new(dimensions.x, dimensions.y)
@@ -183,6 +186,9 @@ public class MapController : MonoBehaviour
         }
         modeText.text = currentMode.ToString();
 
+        // Yoinked from Unity tutorials.
+        // This figures out where the mouse is being clicked.
+
         bool started = Input.GetKeyDown(KeyCode.Mouse0);
         //Check if the left Mouse button is clicked
         if (Input.GetKey(KeyCode.Mouse0))
@@ -250,6 +256,8 @@ public class MapController : MonoBehaviour
         }
     }
 
+    // Used if someone has messed with the markings externally.
+    // Mostly relevant when filling the map.
     public void Refresh()
     {
         foreach (Vector2Int pos in markings.Keys) {

@@ -1,6 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+// Better named as a *collection* of tiles. This class holds
+// one or more coordinates. The coordinates are adjacent to
+// each other, ignoring diagonals.
+
+// A Tile is responsible for generating its features: e.g. a
+// mountain peak, or a collection of trees.
+
+// Tiles can report if they're passable or not, and can also
+// report the height at any point. This is useful for
+// overriding the actual terrain -- e.g. for frozen water.
+
 public abstract class Tile {
     public List<Vector2Int> coordinates = new();
     public Dictionary<Vector2Int, List<GameObject>> features = new();

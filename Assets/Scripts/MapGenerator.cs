@@ -9,8 +9,11 @@ public enum TileAttribute {
     Temperature
 }
 
+// The map generator figures out what goes in each grid space.
+// It consults the WorldMap's configuration in the process.
 public class MapGenerator : MonoBehaviour
 {
+    // I was having problems with infinite looping. This can go away.
     int limit = 100;
     private readonly Dictionary<Vector2Int, TileType> remaining = new();
     public WorldMap map;
@@ -26,6 +29,9 @@ public class MapGenerator : MonoBehaviour
 
         limit = 100000;
         // FIXME: needs an exclusive version of Area
+
+        // -- that is, calling Area with (0,0) and (5,5) gives you coordinates like (5,0) and (4,5),
+        // which is a problem! The largest valid coordinate is (4,4).
         foreach (Vector2Int coord in VectorUtils.Area(map.bounds - new Vector2Int(1, 1)))
         {
             Vector3 worldPos = WorldMap.instance.GetPosFor(coord);
@@ -59,12 +65,15 @@ public class MapGenerator : MonoBehaviour
             }
 
             // bad? yeah. fast enough tho
+            // (we're making this list over and over)
             List<Vector2Int> positions = new(remaining.Keys);
             int index = UnityEngine.Random.Range(0, positions.Count);
             Vector2Int pos = positions[index];
             TileType kind = remaining[pos];
             var foundTiles = FloodFill(pos, kind);
 
+            // design flaw: if you add a new kind of tile, you have to
+            // update this switch. Kind of annoying.
             Tile tile = kind switch
             {
                 TileType.Mountains => new Mountain(foundTiles),
@@ -82,6 +91,8 @@ public class MapGenerator : MonoBehaviour
 
             map.tiles.Add(tile);
         }
+
+        // The spawn point is always here.
         map.landmarkMap[new Vector2Int(3,3)] = new SpawnPoint();
 
         map.SetTerrain();
