@@ -3,10 +3,11 @@ Made for the September 2022 RPI Game Jam, made in Unity 2021.3.9f1
 
 Credits:
 
-- **Steven** - Coding, Modeling
+- **Steven** 
 
-- **Anton** - Art, Character Designs
+- **Anton** 
 
-- **Ali** - Dialouge, 2d Textures
+- **Ali** 
 
-- **Nyx** - Modeling
+- **Nyx** 
+Thank you for an amazing jam everybody!
